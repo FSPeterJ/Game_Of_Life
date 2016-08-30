@@ -393,6 +393,8 @@
             this.graphicsPanel1.Name = "graphicsPanel1";
             this.graphicsPanel1.Size = new System.Drawing.Size(969, 565);
             this.graphicsPanel1.TabIndex = 4;
+            this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.graphicsPanel1_Paint);
+            this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
             // 
             // BaseForm
             // 
