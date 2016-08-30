@@ -30,11 +30,17 @@ namespace Game_Of_Life
         public BaseForm()
         {
             InitializeComponent();
+            //TTime
             time.Enabled = true;
             time.Interval = 20;
             time.Tick += Timer_Tick;
         }
-
+        
+        /// <summary>
+        /// Operations to complete every tick;
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Timer_Tick(object sender, EventArgs e)
         {
             generation++;
@@ -103,7 +109,9 @@ namespace Game_Of_Life
                     universe[x, y] = false;
                 }
             }
+            generation = 0;
             graphicsPanel1.Invalidate();
+            
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
