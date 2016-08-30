@@ -21,12 +21,25 @@ namespace Game_Of_Life
         float width = 0;
         float height = 0;
 
+        Timer time = new Timer();
+
+        int generation = 0;
 
 
 
         public BaseForm()
         {
             InitializeComponent();
+            time.Enabled = true;
+            time.Interval = 20;
+            time.Tick += Timer_Tick;
+        }
+
+        private void Timer_Tick(object sender, EventArgs e)
+        {
+            generation++;
+
+            lbl_Generation.Text = "Generation: " + generation;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -41,7 +54,9 @@ namespace Game_Of_Life
             height = graphicsPanel1.Height / (float)universe.GetLength(1);
 
             Pen linePen = new Pen(Color.Black);
+            Pen lineSectorPen = new Pen(Color.Black, 3);
             Brush liveCellBrsh = new SolidBrush(Color.Green);
+
 
             for (int y = 0; y < universe.GetLength(1); y++)
             {
@@ -77,6 +92,23 @@ namespace Game_Of_Life
                 universe[x, y] = !universe[x, y];
                 graphicsPanel1.Invalidate();
             }
+        }
+
+        private void newToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            for (int y = 0; y < universe.GetLength(1); y++)
+            {
+                for (int x = 0; x < universe.GetLength(0); x++)
+                {
+                    universe[x, y] = false;
+                }
+            }
+            graphicsPanel1.Invalidate();
+        }
+
+        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
