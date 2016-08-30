@@ -10,11 +10,19 @@ using System.Windows.Forms;
 
 namespace Game_Of_Life
 {
-    public partial class Form1 : Form
+    public partial class BaseForm : Form
     {
-        public Form1()
+        public BaseForm()
         {
             InitializeComponent();
         }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+
+
     }
 }
