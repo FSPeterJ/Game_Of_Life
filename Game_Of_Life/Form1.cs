@@ -19,6 +19,10 @@ namespace Game_Of_Life
         bool[,] universe = new bool[30, 30];
         bool[,] scratchpad = new bool[30, 30];
 
+        bool mouseActive = false;
+        int mousegridX = -1;
+        int mousegridY = -1;
+
 
 
         float width = 0;
@@ -38,7 +42,7 @@ namespace Game_Of_Life
             time.Interval = 20;
             time.Tick += Timer_Tick;
         }
-        
+
         /// <summary>
         /// Operations to complete every tick;
         /// </summary>
@@ -95,22 +99,12 @@ namespace Game_Of_Life
             liveCellBrsh.Dispose();
         }
 
-        private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e)
-        {
-            if (e.Button == MouseButtons.Left)
-            {
-                int x = (int)(e.X / width);
-                int y = (int)(e.Y / height);
 
-                universe[x, y] = !universe[x, y];
-                graphicsPanel1.Invalidate();
-            }
-        }
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             New();
-            
+
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
@@ -138,24 +132,24 @@ namespace Game_Of_Life
                 for (int x = 0; x < universe.GetLength(0); x++)
                 {
                     int count = 0;
-                    for (int sy = y-1; sy < y+2; sy++)
+                    for (int sy = y - 1; sy < y + 2; sy++)
                     {
-                        for (int sx = x-1; sx < x+2; sx++)
+                        for (int sx = x - 1; sx < x + 2; sx++)
                         {
-                            
-                            if( sx > -1 && sy > -1 && sx < universe.GetLength(0) && sy < universe.GetLength(1))
+
+                            if (sx > -1 && sy > -1 && sx < universe.GetLength(0) && sy < universe.GetLength(1))
                             {
                                 if (universe[sx, sy] && !(sx == x && sy == y))
                                 {
                                     count++;
                                 }
-                                
+
                             }
 
                         }
                     }
                     switch (count)
-                    { 
+                    {
                         case 2:
                             if (universe[x, y])
                             {
@@ -165,17 +159,17 @@ namespace Game_Of_Life
                             {
                                 scratchpad[x, y] = false;
                             }
-                                break;
+                            break;
                         case 3:
 
-                                scratchpad[x, y] = true;
+                            scratchpad[x, y] = true;
 
                             break;
                         default:
                             scratchpad[x, y] = false;
                             break;
                     }
-                    
+
                 }
             }
             for (int y = 0; y < universe.GetLength(1); y++)
@@ -187,17 +181,12 @@ namespace Game_Of_Life
             }
 
 
-                    graphicsPanel1.Invalidate();
+            graphicsPanel1.Invalidate();
         }
 
         private void newToolStripButton_Click(object sender, EventArgs e)
         {
             New();
-        }
-
-        private void copyToolStripButton_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void cutToolStripButton_Click(object sender, EventArgs e)
@@ -210,5 +199,58 @@ namespace Game_Of_Life
             time.Enabled = false;
         }
 
+        private void graphicsPanel1_MouseDown(object sender, MouseEventArgs e)
+        {
+
+            int x = (int)(e.X / width);
+            int y = (int)(e.Y / height);
+            mousegridX = x;
+            mousegridY = y;
+
+            if (e.Button == MouseButtons.Left)
+            {
+                mouseActive = true;
+                int x = (int)(e.X / width);
+                int y = (int)(e.Y / height);
+
+                universe[x, y] = !universe[x, y];
+                graphicsPanel1.Invalidate();
+            }
+
+
+        }
+
+        private void graphicsPanel1_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                mouseActive = false;
+            }
+
+        }
+
+        private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e)
+        {
+           
+        }
+
+        private void graphicsPanel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (mouseActive)
+            {
+                int x = (int)(e.X / width);
+                int y = (int)(e.Y / height);
+
+                if ((mousegridX != x || mousegridY != y) && x < universe.GetLength(0) && y < universe.GetLength(1) && x > -1 && -1 < y)
+                {
+                    universe[x,y] = !universe[x, y];
+                    mousegridX = x;
+                    mousegridY = y;
+                    graphicsPanel1.Invalidate();
+                }
+
+                
+            }
+        }
     }
 }

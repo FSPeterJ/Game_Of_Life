@@ -359,7 +359,6 @@
             this.tsb_Stop.Name = "tsb_Stop";
             this.tsb_Stop.Size = new System.Drawing.Size(24, 24);
             this.tsb_Stop.Text = "&Stop";
-            this.tsb_Stop.Click += new System.EventHandler(this.copyToolStripButton_Click);
             // 
             // pasteToolStripButton
             // 
@@ -428,6 +427,9 @@
             this.graphicsPanel1.TabIndex = 4;
             this.graphicsPanel1.Paint += new System.Windows.Forms.PaintEventHandler(this.graphicsPanel1_Paint);
             this.graphicsPanel1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseClick);
+            this.graphicsPanel1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseDown);
+            this.graphicsPanel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseMove);
+            this.graphicsPanel1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.graphicsPanel1_MouseUp);
             // 
             // BaseForm
             // 
