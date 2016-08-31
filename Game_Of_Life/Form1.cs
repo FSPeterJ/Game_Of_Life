@@ -13,8 +13,11 @@ namespace Game_Of_Life
     public partial class BaseForm : Form
     {
 
+        int xwidth = 30;
+        int xheight = 30;
 
-        bool[,] universe = new bool[5, 5];
+        bool[,] universe = new bool[30, 30];
+        bool[,] scratchpad = new bool[30, 30];
 
 
 
@@ -31,7 +34,7 @@ namespace Game_Of_Life
         {
             InitializeComponent();
             //TTime
-            time.Enabled = true;
+            time.Enabled = false;
             time.Interval = 20;
             time.Tick += Timer_Tick;
         }
@@ -43,6 +46,7 @@ namespace Game_Of_Life
         /// <param name="e"></param>
         private void Timer_Tick(object sender, EventArgs e)
         {
+            mutate();
             generation++;
 
             lbl_Generation.Text = "Generation: " + generation;
@@ -59,10 +63,11 @@ namespace Game_Of_Life
             width = graphicsPanel1.Width / (float)universe.GetLength(0);
             height = graphicsPanel1.Height / (float)universe.GetLength(1);
 
-            Pen linePen = new Pen(Color.Black);
-            Pen lineSectorPen = new Pen(Color.Black, 3);
-            Brush liveCellBrsh = new SolidBrush(Color.Green);
+            Pen linePen = new Pen(Color.DarkRed);
+            Pen lineSectorPen = new Pen(Color.DarkGray, 3);
+            Brush liveCellBrsh = new SolidBrush(Color.Red);
 
+            int countCells = 0;
 
             for (int y = 0; y < universe.GetLength(1); y++)
             {
@@ -79,11 +84,13 @@ namespace Game_Of_Life
                     if (universe[x, y])
                     {
                         e.Graphics.FillRectangle(liveCellBrsh, rect);
+                        countCells++;
                     }
 
                     e.Graphics.DrawRectangle(linePen, rect.X, rect.Y, rect.Width, rect.Height);
                 }
             }
+            tsl_Cells.Text = "Cells: " + countCells;
             linePen.Dispose();
             liveCellBrsh.Dispose();
         }
@@ -102,6 +109,17 @@ namespace Game_Of_Life
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            New();
+            
+        }
+
+        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void New()
+        {
             for (int y = 0; y < universe.GetLength(1); y++)
             {
                 for (int x = 0; x < universe.GetLength(0); x++)
@@ -111,12 +129,86 @@ namespace Game_Of_Life
             }
             generation = 0;
             graphicsPanel1.Invalidate();
-            
         }
 
-        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
+        private void mutate()
+        {
+            for (int y = 0; y < universe.GetLength(1); y++)
+            {
+                for (int x = 0; x < universe.GetLength(0); x++)
+                {
+                    int count = 0;
+                    for (int sy = y-1; sy < y+2; sy++)
+                    {
+                        for (int sx = x-1; sx < x+2; sx++)
+                        {
+                            
+                            if( sx > -1 && sy > -1 && sx < universe.GetLength(0) && sy < universe.GetLength(1))
+                            {
+                                if (universe[sx, sy] && !(sx == x && sy == y))
+                                {
+                                    count++;
+                                }
+                                
+                            }
+
+                        }
+                    }
+                    switch (count)
+                    { 
+                        case 2:
+                            if (universe[x, y])
+                            {
+                                scratchpad[x, y] = true;
+                            }
+                            else
+                            {
+                                scratchpad[x, y] = false;
+                            }
+                                break;
+                        case 3:
+
+                                scratchpad[x, y] = true;
+
+                            break;
+                        default:
+                            scratchpad[x, y] = false;
+                            break;
+                    }
+                    
+                }
+            }
+            for (int y = 0; y < universe.GetLength(1); y++)
+            {
+                for (int x = 0; x < universe.GetLength(0); x++)
+                {
+                    universe[x, y] = scratchpad[x, y];
+                }
+            }
+
+
+                    graphicsPanel1.Invalidate();
+        }
+
+        private void newToolStripButton_Click(object sender, EventArgs e)
+        {
+            New();
+        }
+
+        private void copyToolStripButton_Click(object sender, EventArgs e)
         {
 
         }
+
+        private void cutToolStripButton_Click(object sender, EventArgs e)
+        {
+            time.Enabled = true;
+        }
+
+        private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+            time.Enabled = false;
+        }
+
     }
 }
