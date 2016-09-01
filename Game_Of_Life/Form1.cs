@@ -123,6 +123,7 @@ namespace Game_Of_Life
             }
             generation = 0;
             graphicsPanel1.Invalidate();
+
         }
 
         private void mutate()
@@ -201,17 +202,16 @@ namespace Game_Of_Life
 
         private void graphicsPanel1_MouseDown(object sender, MouseEventArgs e)
         {
-
-            int x = (int)(e.X / width);
-            int y = (int)(e.Y / height);
-            mousegridX = x;
-            mousegridY = y;
-
             if (e.Button == MouseButtons.Left)
             {
-                mouseActive = true;
                 int x = (int)(e.X / width);
                 int y = (int)(e.Y / height);
+                mousegridX = x;
+                mousegridY = y;
+
+            
+                mouseActive = true;
+
 
                 universe[x, y] = !universe[x, y];
                 graphicsPanel1.Invalidate();
@@ -236,6 +236,7 @@ namespace Game_Of_Life
 
         private void graphicsPanel1_MouseMove(object sender, MouseEventArgs e)
         {
+            
             if (mouseActive)
             {
                 int x = (int)(e.X / width);
@@ -251,6 +252,12 @@ namespace Game_Of_Life
 
                 
             }
+        }
+
+        private void aboutToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AboutBox dlg = new AboutBox();
+            dlg.Show();
         }
     }
 }
