@@ -30,7 +30,7 @@ namespace Game_Of_Life
 
         int generation = 0;
 
-
+        
 
         public BaseForm()
         {
@@ -49,6 +49,7 @@ namespace Game_Of_Life
         private void Timer_Tick(object sender, EventArgs e)
         {
             NextGeneration();
+
         }
 
         public void NextGeneration()
@@ -113,11 +114,15 @@ namespace Game_Of_Life
 
 
                     }
+                    Brush txtbrush = new SolidBrush(Color.Green);
+
+
+                    Font txtFont = new Font(FontFamily.GenericSansSerif, 12, FontStyle.Regular);
 
                     if (true)
                     {
-
-                        //e.Graphics.DrawString(drawString, drawFont, drawBrush, x, y, drawFormat);
+                        e.Graphics.DrawString("8", txtFont, txtbrush, rect);
+                        //e.Graphics.DrawString(MainGrid[x, y].LiveNeighbors, drawFont, drawBrush, x, y, drawFormat);
                     }
 
                 }
