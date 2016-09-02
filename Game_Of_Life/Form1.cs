@@ -12,12 +12,10 @@ namespace Game_Of_Life
 {
     public partial class BaseForm : Form
     {
+        
+        Grid MainGrid = new Grid(30,30);
 
-        int xwidth = 30;
-        int xheight = 30;
-
-        bool[,] universe = new bool[30, 30];
-        bool[,] scratchpad = new bool[30, 30];
+        bool GridEnabled = true;
 
         bool mouseActive = false;
         int mousegridX = -1;
@@ -50,33 +48,41 @@ namespace Game_Of_Life
         /// <param name="e"></param>
         private void Timer_Tick(object sender, EventArgs e)
         {
-            mutate();
-            generation++;
+            NextGeneration();
+        }
 
+        public void NextGeneration()
+        {
+            MainGrid.CalculateNext();
+            graphicsPanel1.Invalidate();
+            generation++;
             lbl_Generation.Text = "Generation: " + generation;
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            graphicsPanel1.Refresh();
+            NextGeneration();
         }
 
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
         {
             //e.Graphics
-            width = graphicsPanel1.Width / (float)universe.GetLength(0);
-            height = graphicsPanel1.Height / (float)universe.GetLength(1);
+            width = graphicsPanel1.Width / (float)MainGrid.Width;
+            height = graphicsPanel1.Height / (float)MainGrid.Height;
 
             Pen linePen = new Pen(Color.DarkRed);
-            Pen lineSectorPen = new Pen(Color.DarkGray, 3);
+            Pen lineSectorPen = new Pen(Color.OrangeRed, 3);
             Brush liveCellBrsh = new SolidBrush(Color.Red);
 
             int countCells = 0;
 
-            for (int y = 0; y < universe.GetLength(1); y++)
+            for (int y = 0; y < MainGrid.Height; y++)
             {
-                for (int x = 0; x < universe.GetLength(0); x++)
+                for (int x = 0; x < MainGrid.Width; x++)
                 {
+
+                    
+
                     //Rectangle
                     RectangleF rect = RectangleF.Empty;
                     rect.X = (x * width);
@@ -84,14 +90,28 @@ namespace Game_Of_Life
                     rect.Width = width;
                     rect.Height = height;
 
+
+                    
+
                     //Cell
-                    if (universe[x, y])
+                    if (MainGrid[x, y].IsOn)
                     {
                         e.Graphics.FillRectangle(liveCellBrsh, rect);
                         countCells++;
                     }
+                    if (GridEnabled)
+                    {
+                        e.Graphics.DrawRectangle(linePen, rect.X, rect.Y, rect.Width, rect.Height);
+                        if (y == 0 && x % 10 == 0)
+                        {
+                            e.Graphics.DrawLine(lineSectorPen, rect.X, 0, rect.X, graphicsPanel1.Height);
+                        }
+                        if (x == 0 && y % 10 == 0)
+                        {
+                            e.Graphics.DrawLine(lineSectorPen, 0, rect.Y, graphicsPanel1.Width, rect.Y);
+                        }
+                    }
 
-                    e.Graphics.DrawRectangle(linePen, rect.X, rect.Y, rect.Width, rect.Height);
                 }
             }
             tsl_Cells.Text = "Cells: " + countCells;
@@ -103,8 +123,7 @@ namespace Game_Of_Life
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            New();
-
+            Reset();
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
@@ -112,82 +131,16 @@ namespace Game_Of_Life
 
         }
 
-        private void New()
+        private void Reset()
         {
-            for (int y = 0; y < universe.GetLength(1); y++)
-            {
-                for (int x = 0; x < universe.GetLength(0); x++)
-                {
-                    universe[x, y] = false;
-                }
-            }
+            MainGrid.Reset();
             generation = 0;
-            graphicsPanel1.Invalidate();
-
-        }
-
-        private void mutate()
-        {
-            for (int y = 0; y < universe.GetLength(1); y++)
-            {
-                for (int x = 0; x < universe.GetLength(0); x++)
-                {
-                    int count = 0;
-                    for (int sy = y - 1; sy < y + 2; sy++)
-                    {
-                        for (int sx = x - 1; sx < x + 2; sx++)
-                        {
-
-                            if (sx > -1 && sy > -1 && sx < universe.GetLength(0) && sy < universe.GetLength(1))
-                            {
-                                if (universe[sx, sy] && !(sx == x && sy == y))
-                                {
-                                    count++;
-                                }
-
-                            }
-
-                        }
-                    }
-                    switch (count)
-                    {
-                        case 2:
-                            if (universe[x, y])
-                            {
-                                scratchpad[x, y] = true;
-                            }
-                            else
-                            {
-                                scratchpad[x, y] = false;
-                            }
-                            break;
-                        case 3:
-
-                            scratchpad[x, y] = true;
-
-                            break;
-                        default:
-                            scratchpad[x, y] = false;
-                            break;
-                    }
-
-                }
-            }
-            for (int y = 0; y < universe.GetLength(1); y++)
-            {
-                for (int x = 0; x < universe.GetLength(0); x++)
-                {
-                    universe[x, y] = scratchpad[x, y];
-                }
-            }
-
-
             graphicsPanel1.Invalidate();
         }
 
         private void newToolStripButton_Click(object sender, EventArgs e)
         {
-            New();
+            Reset();
         }
 
         private void cutToolStripButton_Click(object sender, EventArgs e)
@@ -204,16 +157,18 @@ namespace Game_Of_Life
         {
             if (e.Button == MouseButtons.Left)
             {
+
                 int x = (int)(e.X / width);
                 int y = (int)(e.Y / height);
                 mousegridX = x;
                 mousegridY = y;
 
-            
+                //Console.WriteLine("Click:" + x + " - " + y + " | " + mousegridX + " - " + mousegridY);
+
                 mouseActive = true;
 
 
-                universe[x, y] = !universe[x, y];
+                MainGrid[x, y].ToggleState();
                 graphicsPanel1.Invalidate();
             }
 
@@ -241,10 +196,11 @@ namespace Game_Of_Life
             {
                 int x = (int)(e.X / width);
                 int y = (int)(e.Y / height);
-
-                if ((mousegridX != x || mousegridY != y) && x < universe.GetLength(0) && y < universe.GetLength(1) && x > -1 && -1 < y)
+                if ((mousegridX != x || mousegridY != y) && x < MainGrid.Width && y < MainGrid.Height && x > -1 && -1 < y)
                 {
-                    universe[x,y] = !universe[x, y];
+                    //Console.WriteLine("Move:" + x + " - " + y + " | " + mousegridX + " - " + mousegridY);
+
+                    MainGrid[x, y].ToggleState();
                     mousegridX = x;
                     mousegridY = y;
                     graphicsPanel1.Invalidate();
@@ -258,6 +214,17 @@ namespace Game_Of_Life
         {
             AboutBox dlg = new AboutBox();
             dlg.Show();
+        }
+
+        private void pasteToolStripButton_Click(object sender, EventArgs e)
+        {
+            NextGeneration();
+        }
+
+        private void tsb_ToggleGrid_Click(object sender, EventArgs e)
+        {
+            GridEnabled = !GridEnabled;
+            graphicsPanel1.Invalidate();
         }
     }
 }

@@ -63,9 +63,9 @@
             this.toolStripSeparator6 = new System.Windows.Forms.ToolStripSeparator();
             this.tsb_Play = new System.Windows.Forms.ToolStripButton();
             this.tsb_Stop = new System.Windows.Forms.ToolStripButton();
-            this.pasteToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.tsb_Next = new System.Windows.Forms.ToolStripButton();
             this.toolStripSeparator7 = new System.Windows.Forms.ToolStripSeparator();
-            this.helpToolStripButton = new System.Windows.Forms.ToolStripButton();
+            this.tsb_ToggleGrid = new System.Windows.Forms.ToolStripButton();
             this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
             this.lbl_Generation = new System.Windows.Forms.ToolStripStatusLabel();
@@ -262,30 +262,30 @@
             // contentsToolStripMenuItem
             // 
             this.contentsToolStripMenuItem.Name = "contentsToolStripMenuItem";
-            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.contentsToolStripMenuItem.Size = new System.Drawing.Size(142, 26);
             this.contentsToolStripMenuItem.Text = "&Contents";
             // 
             // indexToolStripMenuItem
             // 
             this.indexToolStripMenuItem.Name = "indexToolStripMenuItem";
-            this.indexToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.indexToolStripMenuItem.Size = new System.Drawing.Size(142, 26);
             this.indexToolStripMenuItem.Text = "&Index";
             // 
             // searchToolStripMenuItem
             // 
             this.searchToolStripMenuItem.Name = "searchToolStripMenuItem";
-            this.searchToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.searchToolStripMenuItem.Size = new System.Drawing.Size(142, 26);
             this.searchToolStripMenuItem.Text = "&Search";
             // 
             // toolStripSeparator5
             // 
             this.toolStripSeparator5.Name = "toolStripSeparator5";
-            this.toolStripSeparator5.Size = new System.Drawing.Size(178, 6);
+            this.toolStripSeparator5.Size = new System.Drawing.Size(139, 6);
             // 
             // aboutToolStripMenuItem
             // 
             this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(142, 26);
             this.aboutToolStripMenuItem.Text = "&About...";
             this.aboutToolStripMenuItem.Click += new System.EventHandler(this.aboutToolStripMenuItem_Click);
             // 
@@ -299,9 +299,9 @@
             this.toolStripSeparator6,
             this.tsb_Play,
             this.tsb_Stop,
-            this.pasteToolStripButton,
+            this.tsb_Next,
             this.toolStripSeparator7,
-            this.helpToolStripButton,
+            this.tsb_ToggleGrid,
             this.toolStripButton1});
             this.toolStrip1.Location = new System.Drawing.Point(0, 28);
             this.toolStrip1.Name = "toolStrip1";
@@ -361,28 +361,30 @@
             this.tsb_Stop.Size = new System.Drawing.Size(24, 24);
             this.tsb_Stop.Text = "&Stop";
             // 
-            // pasteToolStripButton
+            // tsb_Next
             // 
-            this.pasteToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.pasteToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("pasteToolStripButton.Image")));
-            this.pasteToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.pasteToolStripButton.Name = "pasteToolStripButton";
-            this.pasteToolStripButton.Size = new System.Drawing.Size(24, 24);
-            this.pasteToolStripButton.Text = "&Paste";
+            this.tsb_Next.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsb_Next.Image = ((System.Drawing.Image)(resources.GetObject("tsb_Next.Image")));
+            this.tsb_Next.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsb_Next.Name = "tsb_Next";
+            this.tsb_Next.Size = new System.Drawing.Size(24, 24);
+            this.tsb_Next.Text = "N&ext";
+            this.tsb_Next.Click += new System.EventHandler(this.pasteToolStripButton_Click);
             // 
             // toolStripSeparator7
             // 
             this.toolStripSeparator7.Name = "toolStripSeparator7";
             this.toolStripSeparator7.Size = new System.Drawing.Size(6, 27);
             // 
-            // helpToolStripButton
+            // tsb_ToggleGrid
             // 
-            this.helpToolStripButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-            this.helpToolStripButton.Image = ((System.Drawing.Image)(resources.GetObject("helpToolStripButton.Image")));
-            this.helpToolStripButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-            this.helpToolStripButton.Name = "helpToolStripButton";
-            this.helpToolStripButton.Size = new System.Drawing.Size(24, 24);
-            this.helpToolStripButton.Text = "He&lp";
+            this.tsb_ToggleGrid.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+            this.tsb_ToggleGrid.Image = ((System.Drawing.Image)(resources.GetObject("tsb_ToggleGrid.Image")));
+            this.tsb_ToggleGrid.ImageTransparentColor = System.Drawing.Color.Magenta;
+            this.tsb_ToggleGrid.Name = "tsb_ToggleGrid";
+            this.tsb_ToggleGrid.Size = new System.Drawing.Size(24, 24);
+            this.tsb_ToggleGrid.Text = "He&lp";
+            this.tsb_ToggleGrid.Click += new System.EventHandler(this.tsb_ToggleGrid_Click);
             // 
             // toolStripButton1
             // 
@@ -494,9 +496,9 @@
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator6;
         private System.Windows.Forms.ToolStripButton tsb_Play;
         private System.Windows.Forms.ToolStripButton tsb_Stop;
-        private System.Windows.Forms.ToolStripButton pasteToolStripButton;
+        private System.Windows.Forms.ToolStripButton tsb_Next;
         private System.Windows.Forms.ToolStripSeparator toolStripSeparator7;
-        private System.Windows.Forms.ToolStripButton helpToolStripButton;
+        private System.Windows.Forms.ToolStripButton tsb_ToggleGrid;
         private GraphicsPanel graphicsPanel1;
         private System.Windows.Forms.ToolStripStatusLabel lbl_Generation;
         private System.Windows.Forms.ToolStripButton toolStripButton1;
