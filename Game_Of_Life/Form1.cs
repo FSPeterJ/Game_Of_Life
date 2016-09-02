@@ -73,7 +73,7 @@ namespace Game_Of_Life
             Pen linePen = new Pen(Color.DarkRed);
             Pen lineSectorPen = new Pen(Color.OrangeRed, 3);
             Brush liveCellBrsh = new SolidBrush(Color.Red);
-
+            StringFormat drawFormat = new StringFormat();
             int countCells = 0;
 
             for (int y = 0; y < MainGrid.Height; y++)
@@ -110,6 +110,14 @@ namespace Game_Of_Life
                         {
                             e.Graphics.DrawLine(lineSectorPen, 0, rect.Y, graphicsPanel1.Width, rect.Y);
                         }
+
+
+                    }
+
+                    if (true)
+                    {
+
+                        //e.Graphics.DrawString(drawString, drawFont, drawBrush, x, y, drawFormat);
                     }
 
                 }

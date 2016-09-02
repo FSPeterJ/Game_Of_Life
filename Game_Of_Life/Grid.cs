@@ -13,7 +13,7 @@ namespace Game_Of_Life
         public class GridSquare
         {
             bool on = false;
-            int LiveNeighbors = 0;
+            int LN = 0;
 
             public GridSquare()
             {
@@ -26,10 +26,10 @@ namespace Game_Of_Life
                 set { on = value; }
             }
 
-            public int Count
+            public int LiveNeighbors
             {
-                get { return LiveNeighbors; }
-                set { LiveNeighbors = value; }
+                get { return LN; }
+                set { LN = value; }
             }
 
             public void Reset()
@@ -145,7 +145,7 @@ namespace Game_Of_Life
                             ShadowGridSquares[x, y].IsOn = false;
                             break;
                     }
-
+                    GridSquares[x, y].LiveNeighbors = count;
                 }
             }
             for (int y = 0; y < GridSquares.GetLength(1); y++)
@@ -155,7 +155,7 @@ namespace Game_Of_Life
                     GridSquares[x, y].IsOn = ShadowGridSquares[x, y].IsOn;
                 }
             }
-
+           
 
         }
     }
