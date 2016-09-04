@@ -119,10 +119,11 @@ namespace Game_Of_Life
 
                     Font txtFont = new Font(FontFamily.GenericSansSerif, 12, FontStyle.Regular);
 
-                    if (true)
+                    if (false)
                     {
                         e.Graphics.DrawString("8", txtFont, txtbrush, rect);
                         //e.Graphics.DrawString(MainGrid[x, y].LiveNeighbors, drawFont, drawBrush, x, y, drawFormat);
+                        //e.Graphics.Transform
                     }
 
                 }
@@ -132,11 +133,36 @@ namespace Game_Of_Life
             liveCellBrsh.Dispose();
         }
 
+        private void Play()
+        {
+            time.Enabled = true;
+            tsb_Play.Enabled = false;
+            
+            tsb_Next.Enabled = false;
+           
+            tsb_Stop.Enabled = true;
+            startToolStripMenuItem.Enabled = false;
+            nextToolStripMenuItem.Enabled = false;
+            pauseToolStripMenuItem.Enabled = true;
+        }
+
+        private void Pause()
+        {
+            time.Enabled = false;
+            tsb_Play.Enabled = true;
+            tsb_Next.Enabled = true;
+            tsb_Stop.Enabled = false;
+
+            startToolStripMenuItem.Enabled = true;
+            nextToolStripMenuItem.Enabled = true;
+            pauseToolStripMenuItem.Enabled = false;
+        }
 
 
         private void newToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Reset();
+            
         }
 
         private void toolStripStatusLabel1_Click(object sender, EventArgs e)
@@ -147,7 +173,9 @@ namespace Game_Of_Life
         private void Reset()
         {
             MainGrid.Reset();
+            Pause();
             generation = 0;
+            lbl_Generation.Text = "Generation: " + generation;
             graphicsPanel1.Invalidate();
         }
 
@@ -158,12 +186,12 @@ namespace Game_Of_Life
 
         private void cutToolStripButton_Click(object sender, EventArgs e)
         {
-            time.Enabled = true;
+            Play();
         }
 
         private void toolStrip1_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
-            time.Enabled = false;
+            Pause();
         }
 
         private void graphicsPanel1_MouseDown(object sender, MouseEventArgs e)
@@ -238,6 +266,21 @@ namespace Game_Of_Life
         {
             GridEnabled = !GridEnabled;
             graphicsPanel1.Invalidate();
+        }
+
+        private void startToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Play();
+        }
+
+        private void pauseToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Pause();
+        }
+
+        private void nextToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NextGeneration();
         }
     }
 }
