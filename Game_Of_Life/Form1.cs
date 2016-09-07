@@ -440,15 +440,5 @@ namespace Game_Of_Life
         {
             GridEnabled = !GridEnabled;
         }
-
-        private void neighborCountVisibleToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            NeighborsEnabled = !NeighborsEnabled;
-        }
-
-        private void neighborCountVisibleToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            NeighborsEnabled = !NeighborsEnabled;
-        }
     }
 }

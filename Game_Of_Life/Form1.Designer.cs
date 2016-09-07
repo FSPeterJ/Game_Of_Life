@@ -48,10 +48,6 @@
             this.pasteToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
             this.selectAllToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.gridVisibleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.headsUpVisibleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
-            this.neighborCountVisibleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.toolsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.customizeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.optionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -90,6 +86,10 @@
             this.gridVisibleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.headsUpVisibleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.neighborCountVisibleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.gridVisibleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.headsUpVisibleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.neighborCountVisibleToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.graphicsPanel1 = new Game_Of_Life.GraphicsPanel();
             this.menuStrip.SuspendLayout();
             this.toolStrip.SuspendLayout();
@@ -250,36 +250,6 @@
             this.selectAllToolStripMenuItem.Name = "selectAllToolStripMenuItem";
             this.selectAllToolStripMenuItem.Size = new System.Drawing.Size(171, 26);
             this.selectAllToolStripMenuItem.Text = "Select &All";
-            // 
-            // viewToolStripMenuItem
-            // 
-            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.gridVisibleToolStripMenuItem1,
-            this.headsUpVisibleToolStripMenuItem1,
-            this.neighborCountVisibleToolStripMenuItem1});
-            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
-            this.viewToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
-            this.viewToolStripMenuItem.Text = "View";
-            // 
-            // gridVisibleToolStripMenuItem1
-            // 
-            this.gridVisibleToolStripMenuItem1.Name = "gridVisibleToolStripMenuItem1";
-            this.gridVisibleToolStripMenuItem1.Size = new System.Drawing.Size(238, 26);
-            this.gridVisibleToolStripMenuItem1.Text = "Grid Visible";
-            this.gridVisibleToolStripMenuItem1.Click += new System.EventHandler(this.gridVisibleToolStripMenuItem1_Click_1);
-            // 
-            // headsUpVisibleToolStripMenuItem1
-            // 
-            this.headsUpVisibleToolStripMenuItem1.Name = "headsUpVisibleToolStripMenuItem1";
-            this.headsUpVisibleToolStripMenuItem1.Size = new System.Drawing.Size(238, 26);
-            this.headsUpVisibleToolStripMenuItem1.Text = "Heads Up Visible";
-            // 
-            // neighborCountVisibleToolStripMenuItem1
-            // 
-            this.neighborCountVisibleToolStripMenuItem1.Name = "neighborCountVisibleToolStripMenuItem1";
-            this.neighborCountVisibleToolStripMenuItem1.Size = new System.Drawing.Size(238, 26);
-            this.neighborCountVisibleToolStripMenuItem1.Text = "Neighbor Count Visible";
-            this.neighborCountVisibleToolStripMenuItem1.Click += new System.EventHandler(this.neighborCountVisibleToolStripMenuItem1_Click);
             // 
             // toolsToolStripMenuItem
             // 
@@ -530,32 +500,32 @@
             // testToolStripMenuItem
             // 
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(136, 26);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.testToolStripMenuItem.Text = "Test";
             this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
             // 
             // clearToolStripMenuItem
             // 
             this.clearToolStripMenuItem.Name = "clearToolStripMenuItem";
-            this.clearToolStripMenuItem.Size = new System.Drawing.Size(136, 26);
+            this.clearToolStripMenuItem.Size = new System.Drawing.Size(181, 26);
             this.clearToolStripMenuItem.Text = "Clear";
             // 
             // startToolStripMenuItem1
             // 
             this.startToolStripMenuItem1.Name = "startToolStripMenuItem1";
-            this.startToolStripMenuItem1.Size = new System.Drawing.Size(136, 26);
+            this.startToolStripMenuItem1.Size = new System.Drawing.Size(181, 26);
             this.startToolStripMenuItem1.Text = "Start";
             // 
             // pauseToolStripMenuItem1
             // 
             this.pauseToolStripMenuItem1.Name = "pauseToolStripMenuItem1";
-            this.pauseToolStripMenuItem1.Size = new System.Drawing.Size(136, 26);
+            this.pauseToolStripMenuItem1.Size = new System.Drawing.Size(181, 26);
             this.pauseToolStripMenuItem1.Text = "Pause";
             // 
             // nextToolStripMenuItem1
             // 
             this.nextToolStripMenuItem1.Name = "nextToolStripMenuItem1";
-            this.nextToolStripMenuItem1.Size = new System.Drawing.Size(136, 26);
+            this.nextToolStripMenuItem1.Size = new System.Drawing.Size(181, 26);
             this.nextToolStripMenuItem1.Text = "Next";
             // 
             // optionsToolStripMenuItem1
@@ -587,7 +557,35 @@
             this.neighborCountVisibleToolStripMenuItem.Name = "neighborCountVisibleToolStripMenuItem";
             this.neighborCountVisibleToolStripMenuItem.Size = new System.Drawing.Size(238, 26);
             this.neighborCountVisibleToolStripMenuItem.Text = "Neighbor Count Visible";
-            this.neighborCountVisibleToolStripMenuItem.Click += new System.EventHandler(this.neighborCountVisibleToolStripMenuItem_Click);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gridVisibleToolStripMenuItem1,
+            this.headsUpVisibleToolStripMenuItem1,
+            this.neighborCountVisibleToolStripMenuItem1});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(53, 24);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // gridVisibleToolStripMenuItem1
+            // 
+            this.gridVisibleToolStripMenuItem1.Name = "gridVisibleToolStripMenuItem1";
+            this.gridVisibleToolStripMenuItem1.Size = new System.Drawing.Size(238, 26);
+            this.gridVisibleToolStripMenuItem1.Text = "Grid Visible";
+            this.gridVisibleToolStripMenuItem1.Click += new System.EventHandler(this.gridVisibleToolStripMenuItem1_Click_1);
+            // 
+            // headsUpVisibleToolStripMenuItem1
+            // 
+            this.headsUpVisibleToolStripMenuItem1.Name = "headsUpVisibleToolStripMenuItem1";
+            this.headsUpVisibleToolStripMenuItem1.Size = new System.Drawing.Size(238, 26);
+            this.headsUpVisibleToolStripMenuItem1.Text = "Heads Up Visible";
+            // 
+            // neighborCountVisibleToolStripMenuItem1
+            // 
+            this.neighborCountVisibleToolStripMenuItem1.Name = "neighborCountVisibleToolStripMenuItem1";
+            this.neighborCountVisibleToolStripMenuItem1.Size = new System.Drawing.Size(238, 26);
+            this.neighborCountVisibleToolStripMenuItem1.Text = "Neighbor Count Visible";
             // 
             // graphicsPanel1
             // 
