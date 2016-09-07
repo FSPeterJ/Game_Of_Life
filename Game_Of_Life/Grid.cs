@@ -67,15 +67,12 @@ namespace Game_Of_Life
                             {
                                 return false;
                             }
-                            break;
                         case 3:
 
                             return true;
 
-                            break;
                         default:
                             return false;
-                            break;
                     }
                 }
 
@@ -146,7 +143,7 @@ namespace Game_Of_Life
             {
                 for (int x = 0; x < GridSquares.GetLength(0); x++)
                 {
-                    GridSquares[x, y].IsOn = (rnd.Next() % 2 == 0);
+                    GridSquares[x, y].IsOn = (rnd.Next() % 3 == 0);
                 }
             }
         }

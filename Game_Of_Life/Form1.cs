@@ -16,13 +16,17 @@ namespace Game_Of_Life
         Color RectBKColor = Color.Yellow;
 
 
-        Grid MainGrid = new Grid(30, 30);
-
-        bool GridEnabled = true;
+        Grid MainGrid;
+        //DO NOT USE THESE DIRECTLY
+        bool gridstate = true;
+        bool hudstate = true;
+        bool neighborsstate = true;
 
         bool mouseActive = false;
         int mousegridX = -1;
         int mousegridY = -1;
+
+       
 
 
 
@@ -40,8 +44,15 @@ namespace Game_Of_Life
             InitializeComponent();
             //TTime
             time.Enabled = false;
-            time.Interval = 20;
             time.Tick += Timer_Tick;
+
+
+            //Settings Load
+            time.Interval = 20;
+            MainGrid = new Grid(30, 30);
+            GridEnabled = true;
+            NeighborsEnabled = true;
+
         }
 
         /// <summary>
@@ -66,6 +77,54 @@ namespace Game_Of_Life
         private void Form1_Load(object sender, EventArgs e)
         {
             NextGeneration();
+        }
+
+        public bool GridEnabled
+        {
+            get
+            {
+                return gridstate;
+            }
+            set
+            {
+                gridstate = value;
+                if (value)
+                {
+                    gridVisibleToolStripMenuItem.Checked = true;
+                    gridVisibleToolStripMenuItem1.Checked = true;
+                }
+                else
+                {
+
+                    gridVisibleToolStripMenuItem.Checked = false;
+                    gridVisibleToolStripMenuItem1.Checked = false;
+                }
+                graphicsPanel1.Invalidate();
+            }
+        }
+        public bool NeighborsEnabled
+        {
+            get
+            {
+                return neighborsstate;
+            }
+            set
+            {
+                neighborsstate = value;
+                if (value)
+                {
+
+                    neighborCountVisibleToolStripMenuItem.Checked = true;
+                    neighborCountVisibleToolStripMenuItem1.Checked = true;
+                }
+                else
+                {
+
+                    neighborCountVisibleToolStripMenuItem.Checked = false;
+                    neighborCountVisibleToolStripMenuItem1.Checked = false;
+                }
+                graphicsPanel1.Invalidate();
+            }
         }
 
         private void graphicsPanel1_Paint(object sender, PaintEventArgs e)
@@ -131,7 +190,7 @@ namespace Game_Of_Life
 
 
 
-                    if (true)
+                    if (NeighborsEnabled)
                     {
                         int LiveFriends = MainGrid.ProcessNeighbor(x,y);
 
@@ -195,10 +254,7 @@ namespace Game_Of_Life
 
         }
 
-        private void toolStripStatusLabel1_Click(object sender, EventArgs e)
-        {
 
-        }
 
         private void Reset()
         {
@@ -256,10 +312,6 @@ namespace Game_Of_Life
 
         }
 
-        private void graphicsPanel1_MouseClick(object sender, MouseEventArgs e)
-        {
-
-        }
 
         private void graphicsPanel1_MouseMove(object sender, MouseEventArgs e)
         {
@@ -314,10 +366,6 @@ namespace Game_Of_Life
             NextGeneration();
         }
 
-        private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
-        {
-
-        }
 
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -341,7 +389,7 @@ namespace Game_Of_Life
 
 
         //This method came from MSDN
-        //Modified to use floats & acount for height of area;
+        //Modified to use floats & acount for height of area and default that dumb option, might get rid of it;
 
         //https://msdn.microsoft.com/en-us/library/bb986765.aspx
         public Font GetAdjustedFont(Graphics GraphicRef, string GraphicString, Font OriginalFont, float ContainerWidth, float ContainerHeight, int MaxFontSize, int MinFontSize, bool SmallestOnFail = true)
@@ -378,6 +426,19 @@ namespace Game_Of_Life
         private void fromCurrentTimeToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MainGrid.Randomize();
+            graphicsPanel1.Invalidate();
+        }
+
+
+
+        private void gridVisibleToolStripMenuItem1_Click_1(object sender, EventArgs e)
+        {
+            GridEnabled = !GridEnabled;
+        }
+
+        private void gridVisibleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GridEnabled = !GridEnabled;
         }
     }
 }
