@@ -6,8 +6,17 @@ using System.Threading.Tasks;
 
 namespace Game_Of_Life
 {
+
+    enum RandomTypes
+    {
+        Time,
+        Seed,
+        NewSeed
+    }
     class Grid
     {
+        Random rnd = new Random();
+
         GridSquare[,] GridSquares;
         GridSquare[,] ShadowGridSquares;
         public class GridSquare
@@ -42,16 +51,46 @@ namespace Game_Of_Life
             {
                 on = !on;
             }
+
+            public bool WillLive
+            {
+                get
+                {
+                    switch (LiveNeighbors)
+                    {
+                        case 2:
+                            if (IsOn)
+                            {
+                                return true;
+                            }
+                            else
+                            {
+                                return false;
+                            }
+                            break;
+                        case 3:
+
+                            return true;
+
+                            break;
+                        default:
+                            return false;
+                            break;
+                    }
+                }
+
+            }
+
         }
 
 
-        public Grid (int x, int y)
+        public Grid(int x, int y)
         {
             NewGrid(x, y);
         }
         public GridSquare this[int x, int y]
         {
-            get { return GridSquares[x,y]; }
+            get { return GridSquares[x, y]; }
             //set { GridSquares[x, y] = value; }
         }
         public int Width
@@ -70,7 +109,7 @@ namespace Game_Of_Life
             {
                 for (int x = 0; x < GridSquares.GetLength(0); x++)
                 {
-                    GridSquares[x, y].Reset() ;
+                    GridSquares[x, y].Reset();
                 }
             }
 
@@ -84,7 +123,7 @@ namespace Game_Of_Life
             {
                 for (int x = 0; x < temp.GetLength(0); x++)
                 {
-                    if(GridSquares != null && GridSquares[x, y] != null)
+                    if (GridSquares != null && GridSquares[x, y] != null)
                     {
                         temp[x, y] = GridSquares[x, y];
                     }
@@ -93,59 +132,56 @@ namespace Game_Of_Life
                         temp[x, y] = new GridSquare();
                         ShadowGridSquares[x, y] = new GridSquare();
                     }
-                    
+
                 }
             }
-            
+
             GridSquares = temp;
-            
+
         }
 
+        public void Randomize()
+        {
+            for (int y = 0; y < GridSquares.GetLength(1); y++)
+            {
+                for (int x = 0; x < GridSquares.GetLength(0); x++)
+                {
+                    GridSquares[x, y].IsOn = (rnd.Next() % 2 == 0);
+                }
+            }
+        }
+
+
+        public int ProcessNeighbor(int x, int y)
+        {
+            int count = 0;
+            for (int sy = y - 1; sy < y + 2; sy++)
+            {
+                for (int sx = x - 1; sx < x + 2; sx++)
+                {
+
+                    if (sx > -1 && sy > -1 && sx < GridSquares.GetLength(0) && sy < GridSquares.GetLength(1))
+                    {
+                        if (GridSquares[sx, sy].IsOn && !(sx == x && sy == y))
+                        {
+                            count++;
+                        }
+
+                    }
+
+                }
+            }
+            GridSquares[x, y].LiveNeighbors = count;
+            return count;
+        }
         public void CalculateNext()
         {
             for (int y = 0; y < GridSquares.GetLength(1); y++)
             {
                 for (int x = 0; x < GridSquares.GetLength(0); x++)
                 {
-                    int count = 0;
-                    for (int sy = y - 1; sy < y + 2; sy++)
-                    {
-                        for (int sx = x - 1; sx < x + 2; sx++)
-                        {
-
-                            if (sx > -1 && sy > -1 && sx < GridSquares.GetLength(0) && sy < GridSquares.GetLength(1))
-                            {
-                                if (GridSquares[sx, sy].IsOn && !(sx == x && sy == y))
-                                {
-                                    count++;
-                                }
-
-                            }
-
-                        }
-                    }
-                    switch (count)
-                    {
-                        case 2:
-                            if (GridSquares[x, y].IsOn)
-                            {
-                                ShadowGridSquares[x, y].IsOn = true;
-                            }
-                            else
-                            {
-                                ShadowGridSquares[x, y].IsOn = false;
-                            }
-                            break;
-                        case 3:
-
-                            ShadowGridSquares[x, y].IsOn = true;
-
-                            break;
-                        default:
-                            ShadowGridSquares[x, y].IsOn = false;
-                            break;
-                    }
-                    GridSquares[x, y].LiveNeighbors = count;
+                    ProcessNeighbor(x, y);
+                    ShadowGridSquares[x, y].IsOn = GridSquares[x, y].WillLive;
                 }
             }
             for (int y = 0; y < GridSquares.GetLength(1); y++)
@@ -155,7 +191,7 @@ namespace Game_Of_Life
                     GridSquares[x, y].IsOn = ShadowGridSquares[x, y].IsOn;
                 }
             }
-           
+
 
         }
     }
