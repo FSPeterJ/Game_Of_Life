@@ -26,8 +26,6 @@ namespace Game_Of_Life
         int mousegridX = -1;
         int mousegridY = -1;
 
-       
-
 
 
         float width = 0;
@@ -184,15 +182,11 @@ namespace Game_Of_Life
                         {
                             e.Graphics.DrawLine(lineSectorPen, 0, rect.Y, graphicsPanel1.Width, rect.Y);
                         }
-
-
                     }
-
-
 
                     if (NeighborsEnabled)
                     {
-                        int LiveFriends = MainGrid.ProcessNeighbor(x,y);
+                        int LiveFriends = MainGrid.ProcessNeighbor(x, y);
 
                         if (LiveFriends > 0)
                         {
@@ -207,14 +201,11 @@ namespace Game_Of_Life
                             e.Graphics.DrawString(LiveFriends.ToString(), font, txtBrush, rect, stringFormat);
 
                         }
-
-
-
-
                     }
-
                 }
             }
+
+
             tsl_Cells.Text = "Cells: " + countCells;
             linePen.Dispose();
             liveCellBrsh.Dispose();
@@ -253,9 +244,6 @@ namespace Game_Of_Life
             Reset();
 
         }
-
-
-
         private void Reset()
         {
             MainGrid.Reset();
@@ -439,6 +427,16 @@ namespace Game_Of_Life
         private void gridVisibleToolStripMenuItem_Click(object sender, EventArgs e)
         {
             GridEnabled = !GridEnabled;
+        }
+
+        private void neighborCountVisibleToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            NeighborsEnabled = !NeighborsEnabled;
+        }
+
+        private void neighborCountVisibleToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            NeighborsEnabled = !NeighborsEnabled;
         }
     }
 }
