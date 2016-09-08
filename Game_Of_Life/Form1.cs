@@ -25,6 +25,7 @@ namespace Game_Of_Life
         bool mouseActive = false;
         int mousegridX = -1;
         int mousegridY = -1;
+        
 
 
 
@@ -40,7 +41,7 @@ namespace Game_Of_Life
         public BaseForm()
         {
             InitializeComponent();
-            //TTime
+            //Time
             time.Enabled = false;
             time.Tick += Timer_Tick;
 
@@ -50,6 +51,8 @@ namespace Game_Of_Life
             MainGrid = new Grid(30, 30);
             GridEnabled = true;
             NeighborsEnabled = true;
+            MainGrid.NewSeed();
+            //CurrentSeed = 0;
 
         }
 
@@ -165,7 +168,7 @@ namespace Game_Of_Life
                     rect.Y = (y * height);
 
                     //Cell
-                    if (MainGrid[x, y].IsOn)
+                    if (MainGrid[x, y].IsAlive)
                     {
                         e.Graphics.FillRectangle(liveCellBrsh, rect);
                         countCells++;
@@ -211,6 +214,11 @@ namespace Game_Of_Life
             liveCellBrsh.Dispose();
         }
 
+
+        public void DisplayCurrentSeed(int num)
+        {
+            tsl_Cells.Text = "Current Seed: " + num;
+        }
         private void Play()
         {
             time.Enabled = true;
@@ -244,6 +252,8 @@ namespace Game_Of_Life
             Reset();
 
         }
+
+
         private void Reset()
         {
             MainGrid.Reset();
@@ -413,11 +423,16 @@ namespace Game_Of_Life
 
         private void fromCurrentTimeToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            MainGrid.NewSeed();
+            tsl_CurrentSeed.Text = "Current Seed: " + MainGrid.CurrentSeed;
             MainGrid.Randomize();
             graphicsPanel1.Invalidate();
         }
 
-
+        private void fromCurrentSeedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MainGrid.Randomize();
+        }
 
         private void gridVisibleToolStripMenuItem1_Click_1(object sender, EventArgs e)
         {
@@ -438,5 +453,7 @@ namespace Game_Of_Life
         {
             NeighborsEnabled = !NeighborsEnabled;
         }
+
+        
     }
 }

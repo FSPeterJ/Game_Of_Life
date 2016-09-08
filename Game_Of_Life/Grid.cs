@@ -15,41 +15,72 @@ namespace Game_Of_Life
     }
     class Grid
     {
+        public int CurrentSeed{
+            get
+            {
+                return currentseed;
+            }
+            set
+            {
+                currentseed = value;
+                
+            }
+         }
+
+        int currentseed = 0;
+
         Random rnd = new Random();
+        Random rnds = new Random();
 
         GridSquare[,] GridSquares;
         GridSquare[,] ShadowGridSquares;
+
+
+
         public class GridSquare
         {
-            bool on = false;
-            int LN = 0;
+            bool alive = false;
+            int liveneighbors = 0;
+            int age = 0;
+            int generationsactive = 0;
 
             public GridSquare()
             {
 
             }
 
-            public bool IsOn
+            public bool IsAlive
             {
-                get { return on; }
-                set { on = value; }
+                get { return alive; }
+                set { alive = value; }
+            }
+
+            protected internal void CheckGenerations()
+            {
+                if (IsAlive)
+                {
+                    generationsactive++;
+                }
             }
 
             public int LiveNeighbors
             {
-                get { return LN; }
-                set { LN = value; }
+                get { return liveneighbors; }
+                set { liveneighbors = value; }
             }
 
             public void Reset()
             {
-                on = false;
+                alive = false;
                 LiveNeighbors = 0;
+                age = 0;
+                generationsactive = 0;
             }
 
             public void ToggleState()
             {
-                on = !on;
+                alive = !alive;
+                age = 0;
             }
 
             public bool WillLive
@@ -59,7 +90,7 @@ namespace Game_Of_Life
                     switch (LiveNeighbors)
                     {
                         case 2:
-                            if (IsOn)
+                            if (IsAlive)
                             {
                                 return true;
                             }
@@ -112,6 +143,20 @@ namespace Game_Of_Life
 
         }
 
+        public void NewSeed(int seed = 0)
+        {
+            if (seed == 0)
+            {
+
+                CurrentSeed = rnd.Next();
+            }
+            else
+            {
+                CurrentSeed = seed;
+            }
+            rnds = new Random(CurrentSeed);
+        }
+
         public void NewGrid(int width, int height)
         {
             GridSquare[,] temp = new GridSquare[width, height];
@@ -143,7 +188,7 @@ namespace Game_Of_Life
             {
                 for (int x = 0; x < GridSquares.GetLength(0); x++)
                 {
-                    GridSquares[x, y].IsOn = (rnd.Next() % 3 == 0);
+                    GridSquares[x, y].IsAlive = (rnds.Next() % 3 == 0);
                 }
             }
         }
@@ -159,7 +204,7 @@ namespace Game_Of_Life
 
                     if (sx > -1 && sy > -1 && sx < GridSquares.GetLength(0) && sy < GridSquares.GetLength(1))
                     {
-                        if (GridSquares[sx, sy].IsOn && !(sx == x && sy == y))
+                        if (GridSquares[sx, sy].IsAlive && !(sx == x && sy == y))
                         {
                             count++;
                         }
@@ -178,14 +223,17 @@ namespace Game_Of_Life
                 for (int x = 0; x < GridSquares.GetLength(0); x++)
                 {
                     ProcessNeighbor(x, y);
-                    ShadowGridSquares[x, y].IsOn = GridSquares[x, y].WillLive;
+                    ShadowGridSquares[x, y].IsAlive = GridSquares[x, y].WillLive;
                 }
             }
             for (int y = 0; y < GridSquares.GetLength(1); y++)
             {
                 for (int x = 0; x < GridSquares.GetLength(0); x++)
                 {
-                    GridSquares[x, y].IsOn = ShadowGridSquares[x, y].IsOn;
+                    GridSquares[x, y].IsAlive = ShadowGridSquares[x, y].IsAlive;
+
+                    GridSquares[x, y].CheckGenerations();
+
                 }
             }
 
