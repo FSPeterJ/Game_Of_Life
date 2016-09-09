@@ -7,7 +7,7 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Windows.Forms;
+using System.IO;
 
 namespace Game_Of_Life
 {
@@ -392,33 +392,26 @@ namespace Game_Of_Life
         //https://msdn.microsoft.com/en-us/library/bb986765.aspx
         public Font GetAdjustedFont(Graphics GraphicRef, string GraphicString, Font OriginalFont, float ContainerWidth, float ContainerHeight, int MaxFontSize, int MinFontSize, bool SmallestOnFail = true)
         {
-            // We utilize MeasureString which we get via a control instance           
+            MinFontSize = (MinFontSize < 1) ? 1 : MinFontSize;
+            Font TestFont =  new Font(OriginalFont.Name, MinFontSize, OriginalFont.Style);
+
+            // MS: We utilize MeasureString which we get via a control instance           
             for (int AdjustedSize = MaxFontSize; AdjustedSize >= MinFontSize; AdjustedSize--)
             {
-                Font TestFont = new Font(OriginalFont.Name, AdjustedSize, OriginalFont.Style);
-
-                // Test the string with the new size
+                //I don't like the idea that Font is immutable - Why is it like that?
+                TestFont = new Font(OriginalFont.Name, AdjustedSize, OriginalFont.Style);
+                // MS: Test the string with the new size
                 SizeF AdjustedSizeNew = GraphicRef.MeasureString(GraphicString, TestFont);
-
-
-                // Added check for height
+                //add height test
                 if (ContainerWidth > AdjustedSizeNew.Width && ContainerHeight > AdjustedSizeNew.Height)
                 {
-                    // Good font, return it
-                    return TestFont;
+                    // MS: Good font, return it
+                    break;
                 }
             }
+                
+            return TestFont;
 
-            // If you get here there was no fontsize that worked
-            // return MinimumSize or Original?
-            if (SmallestOnFail)
-            {
-                return new Font(OriginalFont.Name, MinFontSize, OriginalFont.Style);
-            }
-            else
-            {
-                return OriginalFont;
-            }
         }
 
         private void fromCurrentTimeToolStripMenuItem_Click(object sender, EventArgs e)
@@ -449,11 +442,11 @@ namespace Game_Of_Life
             NeighborsEnabled = !NeighborsEnabled;
         }
 
-        private void neighborCountVisibleToolStripMenuItem1_Click(object sender, EventArgs e)
-        {
-            NeighborsEnabled = !NeighborsEnabled;
-        }
 
-        
+        private void openToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MainGrid.Load();
+            graphicsPanel1.Invalidate();
+        }
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Windows.Forms;
 
 namespace Game_Of_Life
 {
@@ -216,6 +218,27 @@ namespace Game_Of_Life
             GridSquares[x, y].LiveNeighbors = count;
             return count;
         }
+
+        public void NewGridFromList(List<string> lines)
+        {
+            NewGrid(lines[0].Length, lines.Count);
+            int Linecount = lines.Count;
+            char[,] Arr2d = new char[lines[0].Length, Linecount];
+            for (int i = 0; i < Linecount; i++)
+            {
+                
+                for (int c = 0; c < lines[i].Length; c++)
+                {
+
+                    if(lines[i][c] == 'O')
+                    {
+                        GridSquares[c, i].IsAlive = true;
+
+                    }
+                }
+            }
+        }
+
         public void CalculateNext()
         {
             for (int y = 0; y < GridSquares.GetLength(1); y++)
@@ -238,6 +261,47 @@ namespace Game_Of_Life
             }
 
 
+        }
+
+        internal void Load()
+        {
+            OpenFileDialog ofd = new OpenFileDialog();
+
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                List<string> lines = new List<string>();
+
+                try
+                {
+                    StreamReader reader;
+                    using (reader = new StreamReader(ofd.FileName))
+                    {
+                        string line;
+
+                        for (int i = 0; !reader.EndOfStream; i++)
+                        {
+                            line = reader.ReadLine();
+                            if (line[0] != '!')
+                            {
+                                lines.Add(line);
+                            }
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+                int Linecount = lines.Count;
+                if (Linecount > 0)
+                {
+
+                    NewGridFromList(lines);
+                }
+            }
         }
     }
 }
