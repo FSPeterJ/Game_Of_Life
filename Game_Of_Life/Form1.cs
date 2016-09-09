@@ -177,7 +177,6 @@ namespace Game_Of_Life
 
                     if (GridEnabled)
                     {
-                        e.Graphics.DrawRectangle(linePen, rect.X, rect.Y, rect.Width, rect.Height);
                         if (y == 0 && x % 10 == 0)
                         {
                             e.Graphics.DrawLine(lineSectorPen, rect.X, 0, rect.X, graphicsPanel1.Height);
@@ -186,6 +185,8 @@ namespace Game_Of_Life
                         {
                             e.Graphics.DrawLine(lineSectorPen, 0, rect.Y, graphicsPanel1.Width, rect.Y);
                         }
+                                                e.Graphics.DrawRectangle(linePen, rect.X, rect.Y, rect.Width, rect.Height);
+
                     }
 
                     if (NeighborsEnabled)
@@ -428,10 +429,6 @@ namespace Game_Of_Life
             MainGrid.Randomize();
         }
 
-        private void gridVisibleToolStripMenuItem1_Click_1(object sender, EventArgs e)
-        {
-            GridEnabled = !GridEnabled;
-        }
 
         private void gridVisibleToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -448,6 +445,12 @@ namespace Game_Of_Life
         {
             MainGrid.Load();
             graphicsPanel1.Invalidate();
+        }
+
+        private void saveToolStripButton_Click(object sender, EventArgs e)
+        {
+            Pause();
+            MainGrid.Save();
         }
     }
 }

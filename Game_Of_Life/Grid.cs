@@ -17,7 +17,8 @@ namespace Game_Of_Life
     }
     class Grid
     {
-        public int CurrentSeed{
+        public int CurrentSeed
+        {
             get
             {
                 return currentseed;
@@ -25,9 +26,9 @@ namespace Game_Of_Life
             set
             {
                 currentseed = value;
-                
+
             }
-         }
+        }
 
         int currentseed = 0;
 
@@ -36,6 +37,8 @@ namespace Game_Of_Life
 
         GridSquare[,] GridSquares;
         GridSquare[,] ShadowGridSquares;
+
+        OpenFileDialog ofd = new OpenFileDialog();
 
 
 
@@ -226,11 +229,11 @@ namespace Game_Of_Life
             char[,] Arr2d = new char[lines[0].Length, Linecount];
             for (int i = 0; i < Linecount; i++)
             {
-                
+
                 for (int c = 0; c < lines[i].Length; c++)
                 {
 
-                    if(lines[i][c] == 'O')
+                    if (lines[i][c] == 'O')
                     {
                         GridSquares[c, i].IsAlive = true;
 
@@ -265,8 +268,9 @@ namespace Game_Of_Life
 
         internal void Load()
         {
-            OpenFileDialog ofd = new OpenFileDialog();
 
+            ofd.Filter = "cell files (*.cell)|*.cell|All files (*.*)|*.*";
+            ofd.FilterIndex = 0;
 
             if (ofd.ShowDialog() == DialogResult.OK)
             {
@@ -300,6 +304,47 @@ namespace Game_Of_Life
                 {
 
                     NewGridFromList(lines);
+                }
+            }
+        }
+
+        internal void Save()
+        {
+
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "cell files (*.cell)|*.cell|All files (*.*)|*.*";
+            sfd.FilterIndex = 0;
+
+            if (sfd.ShowDialog() == DialogResult.OK)
+            {
+
+                try
+                {
+                    StreamWriter writer;
+                    using (writer = new StreamWriter(sfd.FileName))
+                    {
+                        for (int y = 0; y < GridSquares.GetLength(1); y++)
+                        {
+                            string line = "";
+                            for (int x = 0; x < GridSquares.GetLength(0); x++)
+                            {
+                                if (GridSquares[x, y].IsAlive)
+                                {
+                                    line += 'O';
+                                }
+                                else
+                                {
+                                    line += '.';
+                                }
+                            }
+                            
+                        writer.WriteLine(line);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not write file to disk. Original error: " + ex.Message);
                 }
             }
         }
