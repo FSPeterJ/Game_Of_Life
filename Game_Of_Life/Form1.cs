@@ -38,7 +38,7 @@ namespace Game_Of_Life
         int generation = 0;
 
 
-
+        
         public BaseForm()
         {
             InitializeComponent();
@@ -148,10 +148,12 @@ namespace Game_Of_Life
             rect.Height = height;
 
             Font font = new Font("Arial", 10f);
+            Font Hudfont = new Font("Arial", 10f);
             Brush Livebrush = new SolidBrush(Color.Green);
             Brush Diebrush = new SolidBrush(Color.DarkRed);
 
             Brush txtBrush = Livebrush;
+            Brush hudBrush = new SolidBrush(Color.Red);
 
             StringFormat stringFormat = new StringFormat();
             stringFormat.Alignment = StringAlignment.Center;
@@ -208,6 +210,13 @@ namespace Game_Of_Life
                         }
                     }
                 }
+            }
+
+            if (hudstate)
+            {
+                string tmp = "Generations : " + generation;
+                e.Graphics.DrawString(tmp, Hudfont, hudBrush, );
+
             }
 
 
