@@ -52,9 +52,10 @@ namespace Game_Of_Life
             MainGrid = new Grid(30, 30);
             GridEnabled = true;
             NeighborsEnabled = true;
-            MainGrid.NewSeed();
-            //CurrentSeed = 0;
-
+            Console.Write(Properties.Settings.Default.Seed);
+            MainGrid.NewSeed(Properties.Settings.Default.Seed);
+            Console.Write(MainGrid.CurrentSeed);
+            DisplayCurrentSeed(MainGrid.CurrentSeed);
         }
 
         /// <summary>
@@ -219,7 +220,7 @@ namespace Game_Of_Life
 
         public void DisplayCurrentSeed(int num)
         {
-            tsl_Cells.Text = "Current Seed: " + num;
+            tsl_CurrentSeed.Text = "Current Seed: " + num;
         }
         private void Play()
         {
@@ -451,6 +452,12 @@ namespace Game_Of_Life
         {
             Pause();
             MainGrid.Save();
+        }
+
+        private void BaseForm_FormClosed(object sender, FormClosingEventArgs e)
+        {
+            Properties.Settings.Default.Seed = MainGrid.CurrentSeed;
+            Properties.Settings.Default.Save();
         }
     }
 }

@@ -631,6 +631,7 @@
             this.MinimumSize = new System.Drawing.Size(99, 49);
             this.Name = "BaseForm";
             this.Text = "Game of Life";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BaseForm_FormClosed);
             this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip.ResumeLayout(false);
             this.menuStrip.PerformLayout();

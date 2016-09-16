@@ -26,7 +26,6 @@ namespace Game_Of_Life
             set
             {
                 currentseed = value;
-
             }
         }
 
