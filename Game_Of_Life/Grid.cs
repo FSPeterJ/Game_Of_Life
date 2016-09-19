@@ -32,11 +32,14 @@ namespace Game_Of_Life
 
         int currentseed = 0;
 
+        int width = 1;
+        int height = 1;
+
         Random rnd = new Random();
         Random rnds = new Random();
 
-        GridSquare[,] GridSquares;
-        GridSquare[,] ShadowGridSquares;
+        GridSquare[,] GridSquares = new GridSquare[1,1];
+        GridSquare[,] ShadowGridSquares = new GridSquare[1, 1];
 
         OpenFileDialog ofd = new OpenFileDialog();
 
@@ -65,6 +68,7 @@ namespace Game_Of_Life
                 if (IsAlive)
                 {
                     generationsactive++;
+                    age++;
                 }
             }
 
@@ -116,24 +120,46 @@ namespace Game_Of_Life
 
         }
 
-
-        public Grid(int x, int y)
+        public Grid()
         {
-            NewGrid(x, y);
+            NewGrid(Width, Height);
+        }
+
+        private Grid(int x, int y)
+        {
+            Width = x;
+            Height = y;
+            NewGrid(Width, Height);
         }
         public GridSquare this[int x, int y]
         {
-            get { return GridSquares[x, y]; }
-            //set { GridSquares[x, y] = value; }
+            get
+            {
+                return GridSquares[x, y];
+            }
         }
         public int Width
         {
-            get { return GridSquares.GetLength(0); }
+            get
+            {
+                return width;
+            }
+            set
+            {
+                width = value;
+            }
         }
 
         public int Height
         {
-            get { return GridSquares.GetLength(1); }
+            get
+            {
+                return height;
+            }
+            set
+            {
+                height = value;
+            }
         }
 
         public void Reset()
@@ -161,17 +187,18 @@ namespace Game_Of_Life
             }
         }
 
-        public void NewGrid(int width, int height)
+        public void NewGrid()
         {
-            GridSquare[,] temp = new GridSquare[width, height];
-            ShadowGridSquares = new GridSquare[width, height];
+            GridSquare[,] temp = new GridSquare[Width, Height];
+            ShadowGridSquares = new GridSquare[Width, Height];
             for (int y = 0; y < temp.GetLength(1); y++)
             {
                 for (int x = 0; x < temp.GetLength(0); x++)
                 {
-                    if (GridSquares != null && GridSquares[x, y] != null)
+                    if (x < GridSquares.GetLength(0) && y < GridSquares.GetLength(1) && GridSquares != null && GridSquares[x, y] != null)
                     {
                         temp[x, y] = GridSquares[x, y];
+                        ShadowGridSquares[x, y] = GridSquares[x, y];
                     }
                     else
                     {
@@ -185,6 +212,14 @@ namespace Game_Of_Life
             GridSquares = temp;
 
         }
+
+        private void NewGrid(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            NewGrid();
+        }
+
 
         public void Randomize()
         {
@@ -223,7 +258,10 @@ namespace Game_Of_Life
 
         public void NewGridFromList(List<string> lines)
         {
+            //Generate new grid
             NewGrid(lines[0].Length, lines.Count);
+
+            //Processes Lines
             int Linecount = lines.Count;
             char[,] Arr2d = new char[lines[0].Length, Linecount];
             for (int i = 0; i < Linecount; i++)

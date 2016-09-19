@@ -25,6 +25,7 @@ namespace Game_Of_Life
         bool gridstate = true;
         bool hudstate = true;
         bool neighborsstate = true;
+        // - - - 
 
         bool mouseActive = false;
         int mousegridX = -1;
@@ -41,6 +42,8 @@ namespace Game_Of_Life
         int generation = 0;
 
 
+
+
         
         public BaseForm()
         {
@@ -52,12 +55,13 @@ namespace Game_Of_Life
 
             //Settings Load
             TimerMS = 20;
-            MainGrid = new Grid(30, 30);
+
+            MainGrid = new Grid();
+            ResizeGrid(30, 30);
+
             GridEnabled = true;
             NeighborsEnabled = true;
             Seed = -1;
-            //CurrentSeed = 0;
-
         }
 
         /// <summary>
@@ -172,6 +176,14 @@ namespace Game_Of_Life
             }
         }
 
+
+        private void ResizeGrid(int width, int height)
+        {
+            GridHeight = height;
+            GridWidth = width;
+            MainGrid.NewGrid();
+        }
+
         int GridHeight
         {
             get
@@ -180,7 +192,21 @@ namespace Game_Of_Life
             }
             set
             {
+                dlg_Options.GridHeight = value;
+                MainGrid.Height = value;
+            }
+        }
 
+        int GridWidth
+        {
+            get
+            {
+                return MainGrid.Width;
+            }
+            set
+            {
+                dlg_Options.GridWidth = value;
+                MainGrid.Width = value;
             }
         }
 
@@ -456,7 +482,9 @@ namespace Game_Of_Life
             if(DialogResult.OK == dlg_Options.DialogResult)
             {
                 TimerMS = dlg_Options.TimerMS;
+                ResizeGrid(dlg_Options.GridWidth, dlg_Options.GridHeight);
             }
+            graphicsPanel1.Invalidate();
         }
 
 
