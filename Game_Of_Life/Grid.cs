@@ -26,7 +26,7 @@ namespace Game_Of_Life
             set
             {
                 currentseed = value;
-
+                rnds = new Random(CurrentSeed);
             }
         }
 
@@ -159,7 +159,6 @@ namespace Game_Of_Life
             {
                 CurrentSeed = seed;
             }
-            rnds = new Random(CurrentSeed);
         }
 
         public void NewGrid(int width, int height)

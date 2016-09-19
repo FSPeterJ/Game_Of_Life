@@ -14,8 +14,11 @@ namespace Game_Of_Life
 {
     public partial class BaseForm : Form
     {
-        Color RectBKColor = Color.Yellow;
+        
+        Options dlg_Options = new Options();
+        SeedDialogue dlg_Seed = new SeedDialogue();
 
+        Color RectBKColor = Color.Yellow;
 
         Grid MainGrid;
         //DO NOT USE THESE DIRECTLY
@@ -48,11 +51,11 @@ namespace Game_Of_Life
 
 
             //Settings Load
-            time.Interval = 20;
+            TimerMS = 20;
             MainGrid = new Grid(30, 30);
             GridEnabled = true;
             NeighborsEnabled = true;
-            MainGrid.NewSeed();
+            Seed = -1;
             //CurrentSeed = 0;
 
         }
@@ -80,6 +83,11 @@ namespace Game_Of_Life
         {
             NextGeneration();
         }
+
+
+        
+
+
 
         public bool GridEnabled
         {
@@ -126,6 +134,53 @@ namespace Game_Of_Life
                     neighborCountVisibleToolStripMenuItem1.Checked = false;
                 }
                 graphicsPanel1.Invalidate();
+            }
+        }
+
+        int TimerMS
+        {
+
+            get
+            {
+                return time.Interval;
+            }
+            set
+            {
+                time.Interval = value;
+                dlg_Options.TimerMS = value;
+            }
+        }
+
+        int Seed
+        {
+            get
+            {
+                return MainGrid.CurrentSeed;
+            }
+            set
+            {
+                if(value == -1)
+                {
+                    MainGrid.NewSeed();
+                }
+                else
+                {
+                    MainGrid.CurrentSeed = value;
+                }
+
+                tsl_CurrentSeed.Text = "Current Seed: " + MainGrid.CurrentSeed;
+            }
+        }
+
+        int GridHeight
+        {
+            get
+            {
+                return MainGrid.Height;
+            }
+            set
+            {
+
             }
         }
 
@@ -215,8 +270,13 @@ namespace Game_Of_Life
             if (hudstate)
             {
                 string tmp = "Generations : " + generation;
-                e.Graphics.DrawString(tmp, Hudfont, hudBrush, );
-
+                e.Graphics.DrawString(tmp, Hudfont, hudBrush, 5, graphicsPanel1.Height - 80);
+                tmp = "Cell Count : " + countCells;
+                e.Graphics.DrawString(tmp, Hudfont, hudBrush, 5, graphicsPanel1.Height - 60);
+                tmp = "Boundary Type : " + countCells;
+                e.Graphics.DrawString(tmp, Hudfont, hudBrush, 5, graphicsPanel1.Height - 40);
+                tmp = "Generations : {Width=" + MainGrid.Width +", Height=" + MainGrid.Height + "}";
+                e.Graphics.DrawString(tmp, Hudfont, hudBrush, 5, graphicsPanel1.Height - 20);
             }
 
 
@@ -226,10 +286,8 @@ namespace Game_Of_Life
         }
 
 
-        public void DisplayCurrentSeed(int num)
-        {
-            tsl_Cells.Text = "Current Seed: " + num;
-        }
+
+
         private void Play()
         {
             time.Enabled = true;
@@ -384,16 +442,21 @@ namespace Game_Of_Life
 
             if (DialogResult.OK == dlg.ShowDialog())
             {
-
+                
 
             }
         }
 
         private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Options dlg = new Options();
+            
 
-            dlg.ShowDialog();
+            dlg_Options.ShowDialog();
+
+            if(DialogResult.OK == dlg_Options.DialogResult)
+            {
+                TimerMS = dlg_Options.TimerMS;
+            }
         }
 
 
@@ -427,8 +490,7 @@ namespace Game_Of_Life
 
         private void fromCurrentTimeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MainGrid.NewSeed();
-            tsl_CurrentSeed.Text = "Current Seed: " + MainGrid.CurrentSeed;
+            Seed = -1;
             MainGrid.Randomize();
             graphicsPanel1.Invalidate();
         }
@@ -460,6 +522,23 @@ namespace Game_Of_Life
         {
             Pause();
             MainGrid.Save();
+        }
+
+        private void fromNewSeedToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            dlg_Seed.Seed = Seed;
+            dlg_Seed.ShowDialog();
+
+            if(dlg_Seed.DialogResult == DialogResult.OK)
+            {
+                Seed = dlg_Seed.Seed;
+            }
+        }
+
+        private void SetOptions()
+        {
+
         }
     }
 }
