@@ -13,7 +13,6 @@ namespace Game_Of_Life
     public partial class Options : Form
     {
 
-        int timems = 0;
         public Options()
         {
             InitializeComponent();
@@ -24,11 +23,35 @@ namespace Game_Of_Life
         {
             get
             {
-                return timems;
+                return (int)nud_TimerMS.Value;
             }
             set
             {
-                timems = value;
+                nud_TimerMS.Value = value;
+            }
+        }
+
+        public int GridWidth
+        {
+            get
+            {
+                return (int)nud_Width.Value;
+            }
+            set
+            {
+                nud_Width.Value = value;
+            }
+        }
+
+        public int GridHeight
+        {
+            get
+            {
+                return (int)nud_Height.Value;
+            }
+            set
+            {
+                nud_Height.Value = value;
             }
         }
 
@@ -43,6 +66,11 @@ namespace Game_Of_Life
         }
 
         private void tabPage1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btn_OK_Click(object sender, EventArgs e)
         {
 
         }

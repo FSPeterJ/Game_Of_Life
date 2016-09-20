@@ -12,34 +12,45 @@ namespace Game_Of_Life
 {
     public partial class SeedDialogue : Form
     {
-        int cSeed = 0;
+        int seed = 0;
         Random rnd = new Random();
-        public SeedDialogue(int seed = 0)
+
+        public int Seed
         {
-            Seed = seed;
+            get
+            {
+                return seed;
+            }
+            set
+            {
+                nud_Seed.Value = value;
+                seed = value;
+            }
+        }
+
+        public SeedDialogue()
+        {
             InitializeComponent();
         }
 
-        public int Seed {
-            get
-            {
-                return cSeed;
-            }
+        private void SeedDialogue_Load(object sender, EventArgs e)
+        {
 
-            set
-            {
-                cSeed = value;
-            }
         }
+
         private void btn_OK_Click(object sender, EventArgs e)
         {
             Close();
         }
 
-        private void btn_Random_Click(object sender, EventArgs e)
+        private void btn_Cancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void btn_Randomize_Click(object sender, EventArgs e)
         {
             Seed = rnd.Next();
-            nud_Seed.Value = Seed;
         }
     }
 }

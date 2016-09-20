@@ -26,16 +26,20 @@ namespace Game_Of_Life
             set
             {
                 currentseed = value;
+                rnds = new Random(CurrentSeed);
             }
         }
 
         int currentseed = 0;
 
+        int width = 1;
+        int height = 1;
+
         Random rnd = new Random();
         Random rnds = new Random();
 
-        GridSquare[,] GridSquares;
-        GridSquare[,] ShadowGridSquares;
+        GridSquare[,] GridSquares = new GridSquare[1,1];
+        GridSquare[,] ShadowGridSquares = new GridSquare[1, 1];
 
         OpenFileDialog ofd = new OpenFileDialog();
 
@@ -64,6 +68,7 @@ namespace Game_Of_Life
                 if (IsAlive)
                 {
                     generationsactive++;
+                    age++;
                 }
             }
 
@@ -115,24 +120,46 @@ namespace Game_Of_Life
 
         }
 
-
-        public Grid(int x, int y)
+        public Grid()
         {
-            NewGrid(x, y);
+            NewGrid(Width, Height);
+        }
+
+        private Grid(int x, int y)
+        {
+            Width = x;
+            Height = y;
+            NewGrid(Width, Height);
         }
         public GridSquare this[int x, int y]
         {
-            get { return GridSquares[x, y]; }
-            //set { GridSquares[x, y] = value; }
+            get
+            {
+                return GridSquares[x, y];
+            }
         }
         public int Width
         {
-            get { return GridSquares.GetLength(0); }
+            get
+            {
+                return width;
+            }
+            set
+            {
+                width = value;
+            }
         }
 
         public int Height
         {
-            get { return GridSquares.GetLength(1); }
+            get
+            {
+                return height;
+            }
+            set
+            {
+                height = value;
+            }
         }
 
         public void Reset()
@@ -158,20 +185,20 @@ namespace Game_Of_Life
             {
                 CurrentSeed = seed;
             }
-            rnds = new Random(CurrentSeed);
         }
 
-        public void NewGrid(int width, int height)
+        public void NewGrid()
         {
-            GridSquare[,] temp = new GridSquare[width, height];
-            ShadowGridSquares = new GridSquare[width, height];
+            GridSquare[,] temp = new GridSquare[Width, Height];
+            ShadowGridSquares = new GridSquare[Width, Height];
             for (int y = 0; y < temp.GetLength(1); y++)
             {
                 for (int x = 0; x < temp.GetLength(0); x++)
                 {
-                    if (GridSquares != null && GridSquares[x, y] != null)
+                    if (x < GridSquares.GetLength(0) && y < GridSquares.GetLength(1) && GridSquares != null && GridSquares[x, y] != null)
                     {
                         temp[x, y] = GridSquares[x, y];
+                        ShadowGridSquares[x, y] = GridSquares[x, y];
                     }
                     else
                     {
@@ -185,6 +212,14 @@ namespace Game_Of_Life
             GridSquares = temp;
 
         }
+
+        private void NewGrid(int width, int height)
+        {
+            Width = width;
+            Height = height;
+            NewGrid();
+        }
+
 
         public void Randomize()
         {
@@ -223,7 +258,10 @@ namespace Game_Of_Life
 
         public void NewGridFromList(List<string> lines)
         {
+            //Generate new grid
             NewGrid(lines[0].Length, lines.Count);
+
+            //Processes Lines
             int Linecount = lines.Count;
             char[,] Arr2d = new char[lines[0].Length, Linecount];
             for (int i = 0; i < Linecount; i++)
@@ -236,6 +274,10 @@ namespace Game_Of_Life
                     {
                         GridSquares[c, i].IsAlive = true;
 
+                    }
+                    else
+                    {
+                        GridSquares[c, i].IsAlive = false;
                     }
                 }
             }
@@ -268,7 +310,7 @@ namespace Game_Of_Life
         internal void Load()
         {
 
-            ofd.Filter = "cell files (*.cell)|*.cell|All files (*.*)|*.*";
+            ofd.Filter = "cells files (*.cells)|*.cells|All files (*.*)|*.*";
             ofd.FilterIndex = 0;
 
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -311,7 +353,7 @@ namespace Game_Of_Life
         {
 
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "cell files (*.cell)|*.cell|All files (*.*)|*.*";
+            sfd.Filter = "cells files (*.cells)|*.cells|All files (*.*)|*.*";
             sfd.FilterIndex = 0;
 
             if (sfd.ShowDialog() == DialogResult.OK)
@@ -347,6 +389,67 @@ namespace Game_Of_Life
                 }
             }
         }
+
+        public void Import()
+        {
+            ofd.Filter = "cells files (*.cells)|*.cells|All files (*.*)|*.*";
+            ofd.FilterIndex = 0;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                List<string> lines = new List<string>();
+
+                try
+                {
+                    StreamReader reader;
+                    using (reader = new StreamReader(ofd.FileName))
+                    {
+                        string line;
+
+                        for (int i = 0; !reader.EndOfStream; i++)
+                        {
+                            line = reader.ReadLine();
+                            if (line[0] != '!')
+                            {
+                                lines.Add(line);
+                            }
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+                int Linecount = lines.Count;
+                if (Linecount > 0)
+                {
+
+
+                    //Processes Lines
+                    char[,] Arr2d = new char[lines[0].Length, Linecount];
+                    for (int i = 0; i < GridSquares.GetLength(1) && i < Linecount; i++)
+                    {
+
+                        for (int c = 0; c < GridSquares.GetLength(0) && c < lines[i].Length; c++)
+                        {
+
+                            if (lines[i][c] == 'O')
+                            {
+                                GridSquares[c, i].IsAlive = true;
+
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+
+
     }
 }
 
