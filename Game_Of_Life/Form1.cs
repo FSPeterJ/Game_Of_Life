@@ -568,5 +568,10 @@ namespace Game_Of_Life
         {
 
         }
+
+        private void importToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            MainGrid.Import();
+        }
     }
 }

@@ -275,6 +275,10 @@ namespace Game_Of_Life
                         GridSquares[c, i].IsAlive = true;
 
                     }
+                    else
+                    {
+                        GridSquares[c, i].IsAlive = false;
+                    }
                 }
             }
         }
@@ -306,7 +310,7 @@ namespace Game_Of_Life
         internal void Load()
         {
 
-            ofd.Filter = "cell files (*.cell)|*.cell|All files (*.*)|*.*";
+            ofd.Filter = "cells files (*.cells)|*.cells|All files (*.*)|*.*";
             ofd.FilterIndex = 0;
 
             if (ofd.ShowDialog() == DialogResult.OK)
@@ -349,7 +353,7 @@ namespace Game_Of_Life
         {
 
             SaveFileDialog sfd = new SaveFileDialog();
-            sfd.Filter = "cell files (*.cell)|*.cell|All files (*.*)|*.*";
+            sfd.Filter = "cells files (*.cells)|*.cells|All files (*.*)|*.*";
             sfd.FilterIndex = 0;
 
             if (sfd.ShowDialog() == DialogResult.OK)
@@ -385,6 +389,67 @@ namespace Game_Of_Life
                 }
             }
         }
+
+        public void Import()
+        {
+            ofd.Filter = "cells files (*.cells)|*.cells|All files (*.*)|*.*";
+            ofd.FilterIndex = 0;
+
+            if (ofd.ShowDialog() == DialogResult.OK)
+            {
+                List<string> lines = new List<string>();
+
+                try
+                {
+                    StreamReader reader;
+                    using (reader = new StreamReader(ofd.FileName))
+                    {
+                        string line;
+
+                        for (int i = 0; !reader.EndOfStream; i++)
+                        {
+                            line = reader.ReadLine();
+                            if (line[0] != '!')
+                            {
+                                lines.Add(line);
+                            }
+                        }
+                    }
+
+
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Error: Could not read file from disk. Original error: " + ex.Message);
+                }
+                int Linecount = lines.Count;
+                if (Linecount > 0)
+                {
+
+
+                    //Processes Lines
+                    char[,] Arr2d = new char[lines[0].Length, Linecount];
+                    for (int i = 0; i < GridSquares.GetLength(1) && i < Linecount; i++)
+                    {
+
+                        for (int c = 0; c < GridSquares.GetLength(0) && c < lines[i].Length; c++)
+                        {
+
+                            if (lines[i][c] == 'O')
+                            {
+                                GridSquares[c, i].IsAlive = true;
+
+                            }
+                        }
+                    }
+                }
+            }
+
+        }
+
+
+
+
     }
 }
 
