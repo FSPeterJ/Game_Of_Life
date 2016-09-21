@@ -18,7 +18,10 @@ namespace Game_Of_Life
         Options dlg_Options = new Options();
         SeedDialogue dlg_Seed = new SeedDialogue();
 
-        Color RectBKColor = Color.Yellow;
+        Color ColorLiveCell = Color.Yellow;
+        Color ColorGrid = Color.Yellow;
+        Color ColorGrid10x = Color.Yellow;
+        Color ColorBack = Color.Yellow;
 
         Grid MainGrid;
         //DO NOT USE THESE DIRECTLY
@@ -54,14 +57,23 @@ namespace Game_Of_Life
 
 
             //Settings Load
-            TimerMS = 20;
+            TimerMS = Properties.Settings.Default.TimerMS;
 
             MainGrid = new Grid();
-            ResizeGrid(30, 30);
+            ResizeGrid(Properties.Settings.Default.Width, Properties.Settings.Default.Height);
 
-            GridEnabled = true;
-            NeighborsEnabled = true;
-            Seed = -1;
+            ColorBack = Properties.Settings.Default.ColorBack;
+            ColorGrid = Properties.Settings.Default.ColorGrid;
+            ColorGrid10x = Properties.Settings.Default.ColorGrid10x;
+            ColorLiveCell = Properties.Settings.Default.ColorCell;
+
+            //BorderType = Properties.Settings.Default.BorderType;
+            GridEnabled = Properties.Settings.Default.GridEnabled;
+            NeighborsEnabled = Properties.Settings.Default.NeighborsEnabled;
+            HUDEnabled = Properties.Settings.Default.HUDEnabled;
+            Seed = Properties.Settings.Default.Seed;
+            GridWidth = Properties.Settings.Default.Width;
+            MainGrid.BorderType = Properties.Settings.Default.BorderType;
         }
 
         /// <summary>
@@ -89,10 +101,33 @@ namespace Game_Of_Life
         }
 
 
-        
 
 
 
+
+        public bool HUDEnabled
+        {
+            get
+            {
+                return hudstate;
+            }
+            set
+            {
+                hudstate = value;
+                if (value)
+                {
+                    headsUpVisibleToolStripMenuItem.Checked = true;
+                    headsUpVisibleToolStripMenuItem1.Checked = true;
+                }
+                else
+                {
+
+                    headsUpVisibleToolStripMenuItem.Checked = false;
+                    headsUpVisibleToolStripMenuItem1.Checked = false;
+                }
+                graphicsPanel1.Invalidate();
+            }
+        }
         public bool GridEnabled
         {
             get
@@ -151,7 +186,7 @@ namespace Game_Of_Life
             set
             {
                 time.Interval = value;
-                dlg_Options.TimerMS = value;
+                
             }
         }
 
@@ -192,7 +227,6 @@ namespace Game_Of_Life
             }
             set
             {
-                dlg_Options.GridHeight = value;
                 MainGrid.Height = value;
             }
         }
@@ -216,9 +250,9 @@ namespace Game_Of_Life
             width = graphicsPanel1.Width / (float)MainGrid.Width;
             height = graphicsPanel1.Height / (float)MainGrid.Height;
 
-            Pen linePen = new Pen(Color.DarkRed);
-            Pen lineSectorPen = new Pen(Color.OrangeRed, 3);
-            Brush liveCellBrsh = new SolidBrush(Color.Red);
+            Pen linePen = new Pen(ColorGrid);
+            Pen lineSectorPen = new Pen(ColorGrid10x, 3);
+            Brush liveCellBrsh = new SolidBrush(ColorLiveCell);
             StringFormat drawFormat = new StringFormat();
             int countCells = 0;
 
@@ -268,12 +302,13 @@ namespace Game_Of_Life
                         {
                             e.Graphics.DrawLine(lineSectorPen, 0, rect.Y, graphicsPanel1.Width, rect.Y);
                         }
-                                                e.Graphics.DrawRectangle(linePen, rect.X, rect.Y, rect.Width, rect.Height);
+                        e.Graphics.DrawRectangle(linePen, rect.X, rect.Y, rect.Width, rect.Height);
 
                     }
 
                     if (NeighborsEnabled)
                     {
+
                         int LiveFriends = MainGrid.ProcessNeighbor(x, y);
 
                         if (LiveFriends > 0)
@@ -299,7 +334,7 @@ namespace Game_Of_Life
                 e.Graphics.DrawString(tmp, Hudfont, hudBrush, 5, graphicsPanel1.Height - 80);
                 tmp = "Cell Count : " + countCells;
                 e.Graphics.DrawString(tmp, Hudfont, hudBrush, 5, graphicsPanel1.Height - 60);
-                tmp = "Boundary Type : " + countCells;
+                tmp = "Boundary Type : " + (MainGrid.BorderType == 1 ? "Wrap" : "Finite" );
                 e.Graphics.DrawString(tmp, Hudfont, hudBrush, 5, graphicsPanel1.Height - 40);
                 tmp = "Generations : {Width=" + MainGrid.Width +", Height=" + MainGrid.Height + "}";
                 e.Graphics.DrawString(tmp, Hudfont, hudBrush, 5, graphicsPanel1.Height - 20);
@@ -473,19 +508,6 @@ namespace Game_Of_Life
             }
         }
 
-        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            
-
-            dlg_Options.ShowDialog();
-
-            if(DialogResult.OK == dlg_Options.DialogResult)
-            {
-                TimerMS = dlg_Options.TimerMS;
-                ResizeGrid(dlg_Options.GridWidth, dlg_Options.GridHeight);
-            }
-            graphicsPanel1.Invalidate();
-        }
 
 
         //This method came from MSDN
@@ -566,12 +588,66 @@ namespace Game_Of_Life
 
         private void SetOptions()
         {
+            dlg_Options.TimerMS = TimerMS;
+            dlg_Options.GridHeight = GridHeight;
+            dlg_Options.GridWidth = GridWidth;
+            dlg_Options.LiveCellColor = ColorLiveCell;
+            dlg_Options.GridColor = ColorGrid;
+            dlg_Options.BackColor = graphicsPanel1.BackColor;
+            dlg_Options.Grid10Color = ColorGrid10x;
+            dlg_Options.BorderType = MainGrid.BorderType;
+
 
         }
+
+        private void optionsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+
+            SetOptions();
+            dlg_Options.ShowDialog();
+
+            if (DialogResult.OK == dlg_Options.DialogResult)
+            {
+                TimerMS = dlg_Options.TimerMS;
+                ResizeGrid(dlg_Options.GridWidth, dlg_Options.GridHeight);
+                graphicsPanel1.BackColor = dlg_Options.BackColor;
+                ColorLiveCell = dlg_Options.LiveCellColor;
+                ColorGrid = dlg_Options.GridColor;
+                ColorGrid10x = dlg_Options.Grid10Color;
+                MainGrid.BorderType = dlg_Options.BorderType;
+            }
+            graphicsPanel1.Invalidate();
+
+
+            
+        }
+
 
         private void importToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MainGrid.Import();
+            graphicsPanel1.Invalidate();
+        }
+
+        private void BaseForm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Properties.Settings.Default.BorderType = MainGrid.BorderType;
+            Properties.Settings.Default.ColorBack = ColorBack;
+            Properties.Settings.Default.ColorCell = ColorLiveCell;
+            Properties.Settings.Default.ColorGrid = ColorGrid;
+            Properties.Settings.Default.ColorGrid10x = ColorGrid10x;
+            Properties.Settings.Default.GridEnabled = GridEnabled;
+            Properties.Settings.Default.HUDEnabled = HUDEnabled;
+            Properties.Settings.Default.Height = GridHeight;
+            Properties.Settings.Default.NeighborsEnabled = NeighborsEnabled;
+            Properties.Settings.Default.Seed = Seed;
+            Properties.Settings.Default.TimerMS = TimerMS;
+            Properties.Settings.Default.Width = GridWidth;
+        }
+
+        private void headsUpVisibleToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            HUDEnabled = !HUDEnabled;
         }
     }
 }

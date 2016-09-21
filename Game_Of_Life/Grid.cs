@@ -9,28 +9,30 @@ using System.Windows.Forms;
 namespace Game_Of_Life
 {
 
-    enum RandomTypes
-    {
-        Time,
-        Seed,
-        NewSeed
-    }
+
     class Grid
     {
-        public int CurrentSeed
+       
+
+
+        public int BorderType
         {
             get
             {
-                return currentseed;
+                return bordertype;
             }
             set
             {
-                currentseed = value;
-                rnds = new Random(CurrentSeed);
+                bordertype = value;
             }
         }
 
         int currentseed = 0;
+
+        //0 - dead
+        //1 - wrap;
+        // NA
+        int bordertype = 1;
 
         int width = 1;
         int height = 1;
@@ -44,7 +46,7 @@ namespace Game_Of_Life
         OpenFileDialog ofd = new OpenFileDialog();
 
 
-
+        
         public class GridSquare
         {
             bool alive = false;
@@ -78,6 +80,7 @@ namespace Game_Of_Life
                 set { liveneighbors = value; }
             }
 
+            //Resets the cell
             public void Reset()
             {
                 alive = false;
@@ -174,6 +177,18 @@ namespace Game_Of_Life
 
         }
 
+        public int CurrentSeed
+        {
+            get
+            {
+                return currentseed;
+            }
+            set
+            {
+                currentseed = value;
+                rnds = new Random(CurrentSeed);
+            }
+        }
         public void NewSeed(int seed = 0)
         {
             if (seed == 0)
@@ -198,7 +213,7 @@ namespace Game_Of_Life
                     if (x < GridSquares.GetLength(0) && y < GridSquares.GetLength(1) && GridSquares != null && GridSquares[x, y] != null)
                     {
                         temp[x, y] = GridSquares[x, y];
-                        ShadowGridSquares[x, y] = GridSquares[x, y];
+                        ShadowGridSquares[x, y] = new GridSquare();
                     }
                     else
                     {
@@ -240,10 +255,32 @@ namespace Game_Of_Life
             {
                 for (int sx = x - 1; sx < x + 2; sx++)
                 {
-
-                    if (sx > -1 && sy > -1 && sx < GridSquares.GetLength(0) && sy < GridSquares.GetLength(1))
+                    int sxt = sx;
+                    int syt = sy;
+                    if(BorderType == 1)
                     {
-                        if (GridSquares[sx, sy].IsAlive && !(sx == x && sy == y))
+                        if (sxt < 0)
+                        {
+                            sxt = GridSquares.GetLength(0) - 1;
+                        }
+                        if (sxt >= GridSquares.GetLength(0))
+                        {
+                            sxt = 0;
+                        }
+
+                        if (syt < 0)
+                        {
+                            syt = GridSquares.GetLength(1) - 1;
+                        }
+                        if (syt >= GridSquares.GetLength(1))
+                        {
+                            syt = 0;
+                        }
+                    }
+
+                    if (sxt > -1 && syt > -1 && sxt < GridSquares.GetLength(0) && syt < GridSquares.GetLength(1))
+                    {
+                        if (GridSquares[sxt, syt].IsAlive && !(sxt == x && syt == y))
                         {
                             count++;
                         }
@@ -255,6 +292,8 @@ namespace Game_Of_Life
             GridSquares[x, y].LiveNeighbors = count;
             return count;
         }
+
+
 
         public void NewGridFromList(List<string> lines)
         {
@@ -293,11 +332,14 @@ namespace Game_Of_Life
                     ShadowGridSquares[x, y].IsAlive = GridSquares[x, y].WillLive;
                 }
             }
+
+
             for (int y = 0; y < GridSquares.GetLength(1); y++)
             {
                 for (int x = 0; x < GridSquares.GetLength(0); x++)
                 {
-                    GridSquares[x, y].IsAlive = ShadowGridSquares[x, y].IsAlive;
+
+                     GridSquares[x, y].IsAlive = ShadowGridSquares[x, y].IsAlive;
 
                     GridSquares[x, y].CheckGenerations();
 
@@ -415,8 +457,6 @@ namespace Game_Of_Life
                             }
                         }
                     }
-
-
                 }
                 catch (Exception ex)
                 {
@@ -425,8 +465,24 @@ namespace Game_Of_Life
                 int Linecount = lines.Count;
                 if (Linecount > 0)
                 {
-
-
+                    // Check import size vs universe;
+                    if(Linecount > GridSquares.GetLength(1) || GridSquares.GetLength(0) > lines[0].Length)
+                    {
+                        string MBText = "Import file is larger than the current universe!"
+                            + "\nChoose 'Yes' to expenad the current universe "
+                            + "\n'No' to import the file anyways"
+                            + "\n'Cancel' will stop the import";
+                        DialogResult MB_Import = MessageBox.Show(MBText,"Import Size Mismatch",MessageBoxButtons.YesNoCancel,MessageBoxIcon.Exclamation,MessageBoxDefaultButton.Button1);
+                        if(DialogResult.Yes == MB_Import)
+                        {
+                            //Expand only the sides that need to be expanded.
+                            NewGrid((lines[0].Length > GridSquares.GetLength(0) ? lines[0].Length  : GridSquares.GetLength(0)), (lines.Count > GridSquares.GetLength(0) ? lines.Count : GridSquares.GetLength(1)));
+                        }
+                        else if (DialogResult.Cancel == MB_Import)
+                        {
+                            return;
+                        }
+                    }
                     //Processes Lines
                     char[,] Arr2d = new char[lines[0].Length, Linecount];
                     for (int i = 0; i < GridSquares.GetLength(1) && i < Linecount; i++)
@@ -438,18 +494,12 @@ namespace Game_Of_Life
                             if (lines[i][c] == 'O')
                             {
                                 GridSquares[c, i].IsAlive = true;
-
                             }
                         }
                     }
                 }
             }
-
         }
-
-
-
-
     }
 }
 
